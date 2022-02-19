@@ -149,7 +149,7 @@ class VMInstance: NSObject, VZVirtualMachineDelegate {
         }
     }
     
-    func start() {
+    func start(bootToRecovery: Bool) {
         guard let hardwareModelData = document?.content.hardwareModelData,
               let machineIdentifierData = document?.content.machineIdentifierData else {
               return
@@ -168,7 +168,25 @@ class VMInstance: NSObject, VZVirtualMachineDelegate {
         ) else {
             return
         }
-        
+
+        if (bootToRecovery){
+
+            let auxiliaryStorage = try? VZMacAuxiliaryStorage(
+                creatingStorageAt: documentURL.appendingPathComponent("aux.img"),
+                hardwareModel: hardwareModel,
+                options: [.allowOverwrite]
+            )
+
+            do {
+                try? auxiliaryStorage?._setValue(
+                    "recovery",
+                    forNVRAMVariableNamed: "boot-command"
+                )
+            } catch {
+              NSLog("NVRAM write error: \(error)")
+            }
+        }
+
         do {
             try configuration.validate()
             

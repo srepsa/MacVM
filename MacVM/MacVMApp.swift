@@ -18,6 +18,15 @@ struct MacVMApp: App {
                 fileURL: configuration.fileURL
             )
         }
-
+        .commands {
+              CommandMenu("VM") {
+                  let recoveryBootBinding = Binding<Bool>(
+                      get: { return true },
+                      set: { _,_ in } )
+                  Toggle(isOn: recoveryBootBinding) {
+                      Text("Boot into Recovery")
+                  }
+              }
+            }
     }
 }

@@ -45,7 +45,7 @@ struct VMView: View {
                         document.vmInstance?.stop()
                     } else {
                         document.createVMInstance(with: fileURL)
-                        document.vmInstance?.start()
+                        document.vmInstance?.start(bootToRecovery: true)
                     }
                 }) {
                     Image(systemName: document.isRunning ? "stop.circle" : "play.circle")
